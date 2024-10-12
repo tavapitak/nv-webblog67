@@ -9,10 +9,10 @@ import Login from '@/components/Login'
 
 import CommentIndex from '@/components/Comments/index' 
 
-import BlogIndex from '@/components/Blogs/index'
-import BlogCreate from '@/components/Blogs/CreateBlog'
-import BlogShow from '@/components/Blogs/ShowBlog'
-import BlogEdit from '@/components/Blogs/EditBlog'
+import TentList from '@/components/Tents/TentList.vue';
+import TentCreate from '@/components/Tents/TentCreate.vue';
+import TentEdit from '@/components/Tents/TentEdit.vue';
+import TentDetails from '@/components/Tents/TentDetails.vue';
 
 import Upload from '@/components/Util/Upload'
 
@@ -47,24 +47,24 @@ export default new Router({
       component: Login
     },
     {
-      path: '/blogs',
-      name: 'blogs',
-      component: BlogIndex
+      path: '/tents',
+      name: 'TentList',
+      component: TentList
     },
     {
-      path: '/blog/create',
-      name: 'blog-create',
-      component: BlogCreate
+      path: '/tents/create',
+      name: 'TentCreate',
+      component: TentCreate
     },
     {
-      path: '/blog/edit/:blogId',
-      name: 'blog-edit',
-      component: BlogEdit
+      path: '/tents/edit/:id',
+      name: 'TentEdit',
+      component: TentEdit
     },
     {
-      path: '/blog/:blogId',
-      name: 'blog',
-      component: BlogShow
+      path: '/tents/:id',
+      name: 'TentDetails',
+      component: TentDetails
     },
     {
       path: '/comments',

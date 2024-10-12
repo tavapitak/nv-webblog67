@@ -1,9 +1,9 @@
 const UserController = require('./controllers/UserController');
 const UserAuthenController = require('./controllers/UserAuthenController');
 const isAuthenController = require('./authen/isAuthenController');
-const BlogController = require('./controllers/BlogController');
+const TentController = require('./controllers/TentController');
 
-let multer = require("multer")
+let multer = require("multer");
 
 // upload section
 let storage = multer.diskStorage({
@@ -11,52 +11,54 @@ let storage = multer.diskStorage({
         callback(null, "./public/uploads");
     },
     filename: function (req, file, callback) {
-        // callback(null, file.fieldname + '-' + Date.now());
         console.log(file);
         callback(null, file.originalname);
     }
-})
-let upload = multer({ storage: storage }).array("userPhoto", 10)
+});
+let upload = multer({ storage: storage }).array("userPhoto", 10);
 
 module.exports = (app) => {
+    // User routes
     app.get('/users', isAuthenController, UserController.index);
     app.get('/user/:userId', UserController.show);
     app.post('/user', UserController.create);
     app.put('/user/:userId', UserController.put);
     app.delete('/user/:userId', UserController.remove);
-    app.post('/login', UserAuthenController.login);
-    app.post('/blog', BlogController.create);
-    app.put('/blog/:blogId', BlogController.put);
-    app.delete('/blog/:blogId', BlogController.remove);
-    app.get('/blog/:blogId', BlogController.show);
-    app.get('/blogs', BlogController.index);
 
-    // upload
+    // User authentication
+    app.post('/login', UserAuthenController.login);
+
+    // Tent routes
+    app.post('/tents', TentController.createTent);
+    app.get('/tents', TentController.getAllTents);
+    app.get('/tents/:id', TentController.getTentById);
+    app.put('/tents/:id', TentController.updateTent);
+    app.delete('/tents/:id', TentController.deleteTent);
+
+    // Upload file
     app.post("/upload", function (req, res) {
-        // isUserAuthenticated,
         upload(req, res, function (err) {
             if (err) {
                 return res.end("Error uploading file.");
             }
             res.end("File is uploaded");
-        })
-    }),
+        });
+    });
 
-    //delete file uploaded function
+    // Delete uploaded file
     app.post('/upload/delete', async function (req, res) {
         try {
-            const fs = require('fs'); 
-            console.log(req.body.filename)
+            const fs = require('fs');
+            console.log(req.body.filename);
 
             fs.unlink(process.cwd() + '/public/uploads/' + req.body.filename, (err) => {
                 if (err) throw err;
-                res.send("Delete sucessful")
-                // console.log('successfully deleted material file');
+                res.send("Delete successful");
             });
         } catch (err) {
             res.status(500).send({
-                error: 'An error has occured trying to delete file the material'
-            })
+                error: 'An error has occurred trying to delete the file.'
+            });
         }
-    })
-}
+    });
+};
